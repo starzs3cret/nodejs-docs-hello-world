@@ -1,11 +1,36 @@
-const http = require('http');
 
-const server = http.createServer((request, response) => {
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.end("Hello World!");
+
+// start discord
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const { prefix, token } = require('./config.json')
+
+
+client.once('ready', () => {
+    console.log('Ready!');
 });
 
-const port = process.env.PORT || 1337;
-server.listen(port);
+client.login(token);
 
-console.log("Server running at http://localhost:%d", port);
+
+//listen message
+client.on('message', message => {
+    console.log(message.content)
+    myFun(message)
+});
+
+function myFun(message) {
+    // client.on('message', message => {
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+    const args = message.content.slice(prefix.length).trim().split(' ');
+    const command = args.shift().toLowerCase();
+    // the rest of your code
+    if (!args.length) {
+        return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+    }
+    else if(command==="emilia"){
+        message.channel.send(`Hi ${message.author}! Kenapa kamu menanyakan ${args}?`)
+    }
+    //message.channel.send(`Command name: ${command}\nArguments: ${args}`);
+}
